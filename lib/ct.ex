@@ -1,12 +1,28 @@
 defmodule CommonTest do
+  defdelegate [get_config(required), get_config(required, default)], to: :ct
+  def ensure(required), do: :ct.require(required)
 
   def pal(s), do: :ct.pal(to_char_list(s))
   def pal(fmt, data), do: :ct.pal(to_char_list(fmt), data)
   def pal(category, fmt, data), do: :ct.pal(category, to_char_list(fmt), data)
 
   def run(options) do
+    config = options[:elixirconfig]
+    if config do
+      options = Keyword.delete options, :elixirconfig
+      options = Keyword.put options, :userconfig, {__MODULE__, encode(config)}
+    end
     :ct.run_test(Keyword.put options, :auto_compile, false)
   end
+
+  # ct wants config to be an erlang string (list fo chars)
+  defp encode(config) do
+    binary_to_list(term_to_binary(config))
+  end
+
+  # callbacks for ct
+  def read_config(config), do: {:ok, binary_to_term(list_to_binary(config))}
+  def check_parameter(config), do: {:ok, {:config, config}}
 end
 
 defmodule CommonTest.Suite do
