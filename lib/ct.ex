@@ -7,9 +7,9 @@ defmodule CommonTest do
   def pal(category, fmt, data), do: :ct.pal(category, to_char_list(fmt), data)
 
   def run(options) do
-    config = options[:elixirconfig]
+    config = options[:extra]
     if config do
-      options = Keyword.delete options, :elixirconfig
+      options = Keyword.delete options, :extra
       options = Keyword.put options, :userconfig, {__MODULE__, encode(config)}
     end
     :ct.run_test(Keyword.put options, :auto_compile, false)

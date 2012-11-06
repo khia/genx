@@ -8,7 +8,7 @@ defmodule GenX.CommonTest.Test do
   def run(suites) do
     logdir = binary_to_list(File.join([File.dirname(__FILE__), "log"]))
     CommonTest.run logdir: logdir, suite: suites,
-       elixirconfig: [multiply: 1, scale: false]
+       extra: [multiply: 1, scale: false]
   end
 end
 
